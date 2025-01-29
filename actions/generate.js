@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const simpleGit = require("simple-git");
 const childProcess = require("child_process");
 const {
   ENV_VARIABLES,
@@ -9,6 +8,8 @@ const {
 } = require("../config/config");
 const CWD = process.cwd();
 const { promptInput } = require("../utils/prompt");
+const { clone } = require("../utils/git");
+const { generateFile } = require("../utils/file");
 
 module.exports = async () => {
   const answers = await promptInput(promptQuestions);
@@ -21,10 +22,7 @@ module.exports = async () => {
   }
 
   try {
-    const git = simpleGit();
-    console.log(`generating files and directories...`);
-    await git.clone(GIT_REPO_URL, projectPath);
-    console.log(`successfully generated files and directories`);
+    await clone(GIT_REPO_URL, answers.projectName);
     process.chdir(projectPath);
     console.log("installing dependencies...");
     childProcess.execSync("npm install", { stdio: "inherit" });
@@ -40,7 +38,9 @@ module.exports = async () => {
       .map((entry) => `${entry[0]}=${entry[1]}`)
       .join("\n");
 
-    fs.promises.writeFile(".env", envFileContent);
+    await generateFile(".env", envFileContent);
+
+    // await fs.promises.writeFile(".env", envFileContent);
 
     console.log("successfully generated .env");
 
