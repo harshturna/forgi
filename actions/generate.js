@@ -1,25 +1,22 @@
-const inquirer = require("inquirer");
 const fs = require("fs");
 const path = require("path");
 const simpleGit = require("simple-git");
 const childProcess = require("child_process");
-const { ENV_VARIABLES, GIT_REPO_URL } = require("../constants");
+const {
+  ENV_VARIABLES,
+  GIT_REPO_URL,
+  promptQuestions,
+} = require("../config/config");
 const CWD = process.cwd();
+const { promptInput } = require("../utils/prompt");
 
 module.exports = async () => {
-  const prompt = inquirer.createPromptModule();
-  const answer = await prompt([
-    {
-      name: "projectName",
-      message: "What is the project name?",
-      type: "input",
-    },
-  ]);
+  const answers = await promptInput(promptQuestions);
 
-  const projectPath = path.join(CWD, answer.projectName);
+  const projectPath = path.join(CWD, answers.projectName);
 
   if (fs.existsSync(projectPath)) {
-    console.log(`${answer.projectName} already exists`);
+    console.log(`${answers.projectName} already exists`);
     return;
   }
 
@@ -37,7 +34,7 @@ module.exports = async () => {
     console.log("Generating .env file...");
 
     ENV_VARIABLES.DB_CONNECTION =
-      ENV_VARIABLES.DB_CONNECTION += `${answer.projectName}`;
+      ENV_VARIABLES.DB_CONNECTION += `${answers.projectName}`;
 
     const envFileContent = Object.entries(ENV_VARIABLES)
       .map((entry) => `${entry[0]}=${entry[1]}`)
@@ -48,7 +45,7 @@ module.exports = async () => {
     console.log("successfully generated .env");
 
     console.log(
-      `your project ${answer.projectName} has been setup successfully`
+      `your project ${answers.projectName} has been setup successfully`
     );
   } catch (error) {
     console.log(error);

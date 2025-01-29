@@ -5,7 +5,15 @@ const ENV_VARIABLES = {
   NODE_ENV: "development",
 };
 
+// prompt inputs
+const projectNameInputQuestion = {
+  name: "projectName",
+  message: "What is the project name?",
+  type: "input",
+};
+
 module.exports = {
   GIT_REPO_URL,
   ENV_VARIABLES,
+  promptQuestions: [projectNameInputQuestion],
 };
