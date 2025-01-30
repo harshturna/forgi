@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const childProcess = require("child_process");
 const {
   ENV_VARIABLES,
   GIT_REPO_URL,
@@ -10,6 +9,7 @@ const CWD = process.cwd();
 const { promptInput } = require("../utils/prompt");
 const { clone } = require("../utils/git");
 const { generateFile } = require("../utils/file");
+const { runCommand } = require("../utils/runner");
 
 module.exports = async () => {
   const answers = await promptInput(promptQuestions);
@@ -22,30 +22,24 @@ module.exports = async () => {
   }
 
   try {
+    // cloning git repo
     await clone(GIT_REPO_URL, answers.projectName);
-    process.chdir(projectPath);
-    console.log("installing dependencies...");
-    childProcess.execSync("npm install", { stdio: "inherit" });
-    console.log("");
-    console.log("successfully installed dependencies");
 
-    console.log("Generating .env file...");
+    // installing dependencies
+    const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+    await runCommand(npmCommand, ["install"], { cwd: projectPath });
 
+    // generating .env file
+    const envFilePath = path.join(projectPath, ".env");
     ENV_VARIABLES.DB_CONNECTION =
       ENV_VARIABLES.DB_CONNECTION += `${answers.projectName}`;
-
     const envFileContent = Object.entries(ENV_VARIABLES)
       .map((entry) => `${entry[0]}=${entry[1]}`)
       .join("\n");
-
-    await generateFile(".env", envFileContent);
-
-    // await fs.promises.writeFile(".env", envFileContent);
-
-    console.log("successfully generated .env");
+    await generateFile(envFilePath, envFileContent);
 
     console.log(
-      `your project ${answers.projectName} has been setup successfully`
+      `your project ${answers.projectName} has been setup successfully\n`
     );
   } catch (error) {
     console.log(error);
