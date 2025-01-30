@@ -1,19 +1,22 @@
 const fs = require("fs");
 const path = require("path");
-const {
-  ENV_VARIABLES,
-  GIT_REPO_URL,
-  promptQuestions,
-} = require("../config/config");
-const CWD = process.cwd();
+
+const { ENV_VARIABLES, GIT_REPO_URL } = require("../config/config");
 const { promptInput } = require("../utils/prompt");
 const { clone } = require("../utils/git");
 const { generateFile } = require("../utils/file");
 const { runCommand } = require("../utils/runner");
 
 module.exports = async () => {
-  const answers = await promptInput(promptQuestions);
+  const answers = await promptInput([
+    {
+      name: "projectName",
+      message: "What is the project name?",
+      type: "input",
+    },
+  ]);
 
+  const CWD = process.cwd();
   const projectPath = path.join(CWD, answers.projectName);
 
   if (fs.existsSync(projectPath)) {
