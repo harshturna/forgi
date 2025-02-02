@@ -7,7 +7,7 @@ const { clone } = require("../utils/git");
 const { generateFile } = require("../utils/file");
 const { runCommand } = require("../utils/runner");
 
-module.exports = async () => {
+async function generate() {
   const answers = await promptInput([
     {
       name: "projectName",
@@ -47,4 +47,6 @@ module.exports = async () => {
   } catch (error) {
     console.log(error);
   }
-};
+}
+
+module.exports = { generate };

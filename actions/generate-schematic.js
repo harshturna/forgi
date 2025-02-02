@@ -7,63 +7,13 @@ const {
   getSchematicContentGenerator,
 } = require("../utils/schematic");
 const { generateFile } = require("../utils/file");
-const {
-  generateExportStatement,
-  generateModelContent,
-} = require("../utils/content");
+const { generateExportStatement } = require("../utils/content");
 
-async function generateSchematic(schematicName) {
+async function generateSchematic() {
   const answers = await promptInput([
     {
-      name: "fileName",
-      message: `What is the ${schematicName} filename?`,
-      type: "input",
-    },
-    {
-      name: "projectName",
-      message: `What is the project name?`,
-      type: "input",
-    },
-  ]);
-
-  const CWD = process.cwd();
-  const schematicFilePath = path.join(
-    CWD,
-    answers.projectName,
-    getSchematicDir(schematicName),
-    `${answers.fileName}.${schematicName}.js`
-  );
-
-  if (fs.existsSync(schematicFilePath)) {
-    console.log(`${answers.fileName} already exists`);
-    return;
-  }
-
-  const contentGenerator = getSchematicContentGenerator(schematicName);
-
-  await generateFile(
-    schematicFilePath,
-    contentGenerator({ fileName: answers.fileName })
-  );
-
-  const indexPath = path.join(
-    CWD,
-    answers.projectName,
-    getSchematicDir(schematicName),
-    "index.js"
-  );
-
-  await fs.promises.appendFile(
-    indexPath,
-    generateExportStatement(answers.fileName, schematicName)
-  );
-}
-
-async function createSchematic(schematicName) {
-  const answers = await promptInput([
-    {
-      name: "name",
-      message: `What is the ${schematicName} name?`,
+      name: "entityName",
+      message: `What is the entity name?`,
       type: "input",
     },
     {
@@ -73,21 +23,103 @@ async function createSchematic(schematicName) {
     },
     {
       name: "fields",
-      message: `Enter the list of fields separated with comma`,
+      message: `Enter the list of fields separated with comma (for model and validation)`,
       type: "input",
     },
     {
       name: "types",
-      message: `Enter the list of field types separated with comma`,
+      message: `Enter the list of field types separated with comma (for model and validation)`,
       type: "input",
     },
   ]);
 
+  // controller
+  await generateSchematicFile(
+    answers.projectName,
+    "controller",
+    answers.entityName,
+    { fileName: answers.entityName }
+  );
+
+  // route
+  await generateSchematicFile(
+    answers.projectName,
+    "route",
+    answers.entityName,
+    { fileName: answers.entityName }
+  );
+
+  // service
+  await generateSchematicFile(
+    answers.projectName,
+    "service",
+    answers.entityName,
+    { fileName: answers.entityName }
+  );
+
+  // model
   const fields = answers.fields.split(",");
-  const types = answers.fields.split(",");
+  const types = answers.types.split(",");
+  await generateSchematicFile(
+    answers.projectName,
+    "model",
+    answers.entityName,
+    {
+      fields,
+      types,
+      modelName: answers.entityName,
+    }
+  );
+
+  // validation
+  await generateSchematicFile(
+    answers.projectName,
+    "validation",
+    answers.entityName,
+    {
+      fields,
+      types,
+      validationName: answers.entityName,
+    }
+  );
+}
+
+async function generateSchematicFile(
+  projectName,
+  schematicName,
+  fileName,
+  contentGeneratorArg
+) {
+  const CWD = process.cwd();
+  const schematicFilePath = path.join(
+    CWD,
+    projectName,
+    getSchematicDir(schematicName),
+    `${fileName}.${schematicName}.js`
+  );
+
+  if (fs.existsSync(schematicFilePath)) {
+    console.log(`${answers.name} already exists`);
+    return;
+  }
+
+  const contentGenerator = getSchematicContentGenerator(schematicName);
+
+  await generateFile(schematicFilePath, contentGenerator(contentGeneratorArg));
+
+  const indexPath = path.join(
+    CWD,
+    projectName,
+    getSchematicDir(schematicName),
+    "index.js"
+  );
+
+  await fs.promises.appendFile(
+    indexPath,
+    generateExportStatement(fileName, schematicName)
+  );
 }
 
 module.exports = {
   generateSchematic,
-  createSchematic,
 };

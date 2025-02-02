@@ -157,7 +157,7 @@ function generateExportStatement(fileName, schematicName) {
   )} = require("./${fileName}.${schematicName}")`;
 }
 
-function generateModelContent(modelName, fields, types) {
+function generateModelContent({ modelName, fields, types }) {
   if (fields.length !== types.length) {
     throw new Error("Equivalent fields and types not provided");
   }
@@ -165,19 +165,42 @@ function generateModelContent(modelName, fields, types) {
   const capitalizedModelName = capitalize(modelName);
   const schemaFields = fields
     .map((field, index) => {
-      return `{${field}: {type: ${getType(types[index])}}}`;
+      return `${field}: {type: ${getType(types[index])}}`;
     })
     .join(",\n");
 
-  return `
-      const mongoose = require('mongoose');
+  return `const mongoose = require('mongoose');
 const ${modelName}Schema = mongoose.Schema({
-${schemaFields}
+  ${schemaFields}
 });
 const ${capitalizedModelName} = mongoose.model(${capitalizedModelName}, ${modelName}Schema);
 
 module.exports = ${capitalizedModelName};
 `;
+}
+
+function generateValidationContent({ validationName, fields, types }) {
+  if (fields.length !== types.length) {
+    throw new Error("Equivalent fields and types not provided");
+  }
+
+  const capitalizedValidationName = capitalize(validationName);
+  const schemaFields = fields
+    .map((field, index) => {
+      return `${field}: {type: ${getJoiType(types[index])}}`;
+    })
+    .join(",\n");
+
+  return `const joi = require('joi');
+const create${capitalizedValidationName}Schema = {
+  body: joi.object().keys({
+  ${schemaFields}
+  }),
+};
+
+module.exports = {
+  create${capitalizedValidationName}Schema,
+}`;
 }
 
 function getType(type) {
@@ -194,6 +217,31 @@ function getType(type) {
     case "date":
       return "Date";
 
+    case "objectid":
+      return "mongoose.Schema.Types.ObjectId";
+
+    default:
+      throw new Error(`${type} is not supported`);
+  }
+}
+
+function getJoiType(type) {
+  switch (type.trim().toLowerCase()) {
+    case "string":
+      return "joi.string()";
+
+    case "number":
+      return "joi.number()";
+
+    case "boolean":
+      return "joi.boolean()";
+
+    case "date":
+      return "joi.date()";
+
+    case "objectid":
+      return "joi.string()";
+
     default:
       throw new Error(`${type} is not supported`);
   }
@@ -205,6 +253,7 @@ module.exports = {
   generateRouteContent,
   generateExportStatement,
   generateModelContent,
+  generateValidationContent,
   capitalize,
   getType,
 };

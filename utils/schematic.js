@@ -2,6 +2,8 @@ const {
   generateControllerContent,
   generateRouteContent,
   generateServiceContent,
+  generateModelContent,
+  generateValidationContent,
 } = require("./content");
 
 function getSchematicDir(schematicName) {
@@ -14,6 +16,10 @@ function getSchematicDir(schematicName) {
       return "middlewares";
     case "service":
       return "services";
+    case "model":
+      return "models";
+    case "validation":
+      return "validations";
 
     default:
       throw new Error(`${schematicName} is not supported`);
@@ -28,8 +34,10 @@ function getSchematicContentGenerator(schematicName) {
       return generateRouteContent;
     case "service":
       return generateServiceContent;
-    case "middleware":
-      return "middlewares";
+    case "model":
+      return generateModelContent;
+    case "validation":
+      return generateValidationContent;
 
     default:
       throw new Error(`${schematicName} is not supported`);

@@ -1,9 +1,6 @@
 const { program } = require("commander");
-const generate = require("./actions/generate");
-const {
-  generateSchematic,
-  createSchematic,
-} = require("./actions/generate-schematic");
+const { generate } = require("./actions/generate");
+const { generateSchematic } = require("./actions/generate-schematic");
 
 program
   .version("1.0.0")
@@ -15,15 +12,10 @@ program
   .action(generate);
 
 program
-  .command("generate <schematicName>")
+  .command("generate")
   .description(
-    "Generates different schematic (controller, route, middleware, service)"
+    "Generates schematics (controller, route, service, model and validation)"
   )
   .action(generateSchematic);
-
-program
-  .command("create <schematicName>")
-  .description("Generates different schematic (module)")
-  .action(createSchematic);
 
 program.parse(process.argv);
