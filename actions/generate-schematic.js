@@ -10,8 +10,9 @@ const { generateFile } = require("../utils/file");
 const { generateExportStatement } = require("../utils/content");
 
 async function generateSchematic() {
+  let answers;
   try {
-    const answers = await promptInput([
+    answers = await promptInput([
       {
         name: "entityName",
         message: `What is the entity name?`,

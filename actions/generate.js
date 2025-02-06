@@ -8,8 +8,9 @@ const { generateFile, deleteFile, deleteDir } = require("../utils/file");
 const { runCommand } = require("../utils/runner");
 
 async function generate() {
+  let answers;
   try {
-    const answers = await promptInput([
+    answers = await promptInput([
       {
         name: "projectName",
         message: "What is the project name?",
