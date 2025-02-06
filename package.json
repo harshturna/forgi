@@ -1,9 +1,9 @@
 {
-  "name": "your-cli-name",
+  "name": "forgi",
   "version": "1.0.0",
   "description": "A CLI tool to generate Node.js MVC boilerplate",
   "bin": {
-    "your-cli-name": "./index.js"
+    "forgi": "./index.js"
   },
   "keywords": [
     "cli",
@@ -12,16 +12,16 @@
     "mvc",
     "generator"
   ],
-  "author": "Your Name",
+  "author": "Harsh Turna",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/your-repo.git"
+    "url": "git+https://github.com/harshturna/forgi.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/your-repo/issues"
+    "url": "https://github.com/harshturna/forgi/issues"
   },
-  "homepage": "https://github.com/yourusername/your-repo#readme",
+  "homepage": "https://github.com/harshturna/forgi#readme",
   "dependencies": {
     "commander": "^13.1.0",
     "inquirer": "^12.3.3",
