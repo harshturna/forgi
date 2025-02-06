@@ -1,4 +1,27 @@
 {
+  "name": "your-cli-name",
+  "version": "1.0.0",
+  "description": "A CLI tool to generate Node.js MVC boilerplate",
+  "bin": {
+    "your-cli-name": "./index.js"
+  },
+  "keywords": [
+    "cli",
+    "nodejs",
+    "scaffold",
+    "mvc",
+    "generator"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/your-repo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/your-repo/issues"
+  },
+  "homepage": "https://github.com/yourusername/your-repo#readme",
   "dependencies": {
     "commander": "^13.1.0",
     "inquirer": "^12.3.3",

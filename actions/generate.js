@@ -4,7 +4,7 @@ const path = require("path");
 const { ENV_VARIABLES, GIT_REPO_URL } = require("../config/config");
 const { promptInput } = require("../utils/prompt");
 const { clone } = require("../utils/git");
-const { generateFile } = require("../utils/file");
+const { generateFile, deleteFile, deleteDir } = require("../utils/file");
 const { runCommand } = require("../utils/runner");
 
 async function generate() {
@@ -31,6 +31,14 @@ async function generate() {
     // installing dependencies
     const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
     await runCommand(npmCommand, ["install"], { cwd: projectPath });
+
+    // deleting  git
+    const gitFolderPath = path.join(projectPath, ".git");
+    await deleteDir(gitFolderPath);
+
+    // deleting license
+    const licenseFilePath = path.join(projectPath, "LICENSE");
+    await deleteFile(licenseFilePath);
 
     // generating .env file
     const envFilePath = path.join(projectPath, ".env");
