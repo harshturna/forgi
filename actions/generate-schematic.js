@@ -61,7 +61,6 @@ async function generateSchematic() {
 }
 
 async function generateSchematicFile(
-  projectName,
   schematicName,
   fileName,
   contentGeneratorArg
@@ -69,7 +68,6 @@ async function generateSchematicFile(
   const CWD = process.cwd();
   const schematicFilePath = path.join(
     CWD,
-    projectName,
     getSchematicDir(schematicName),
     `${fileName}.${schematicName}.js`
   );
@@ -83,12 +81,7 @@ async function generateSchematicFile(
 
   await generateFile(schematicFilePath, contentGenerator(contentGeneratorArg));
 
-  const indexPath = path.join(
-    CWD,
-    projectName,
-    getSchematicDir(schematicName),
-    "index.js"
-  );
+  const indexPath = path.join(CWD, getSchematicDir(schematicName), "index.js");
 
   await fs.promises.appendFile(
     indexPath,
