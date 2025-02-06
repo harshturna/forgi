@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { program } = require("commander");
 const { generate } = require("./actions/generate");
 const { generateSchematic } = require("./actions/generate-schematic");
