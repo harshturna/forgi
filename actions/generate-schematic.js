@@ -10,23 +10,27 @@ const { generateFile } = require("../utils/file");
 const { generateExportStatement } = require("../utils/content");
 
 async function generateSchematic() {
-  const answers = await promptInput([
-    {
-      name: "entityName",
-      message: `What is the entity name?`,
-      type: "input",
-    },
-    {
-      name: "fields",
-      message: `Enter the list of fields separated with comma (for model and validation)`,
-      type: "input",
-    },
-    {
-      name: "types",
-      message: `Enter the list of field types separated with comma (for model and validation)`,
-      type: "input",
-    },
-  ]);
+  try {
+    const answers = await promptInput([
+      {
+        name: "entityName",
+        message: `What is the entity name?`,
+        type: "input",
+      },
+      {
+        name: "fields",
+        message: `Enter the list of fields separated with comma (for model and validation)`,
+        type: "input",
+      },
+      {
+        name: "types",
+        message: `Enter the list of field types separated with comma (for model and validation)`,
+        type: "input",
+      },
+    ]);
+  } catch {
+    return;
+  }
 
   // controller
   await generateSchematicFile("controller", answers.entityName, {

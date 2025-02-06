@@ -8,13 +8,17 @@ const { generateFile, deleteFile, deleteDir } = require("../utils/file");
 const { runCommand } = require("../utils/runner");
 
 async function generate() {
-  const answers = await promptInput([
-    {
-      name: "projectName",
-      message: "What is the project name?",
-      type: "input",
-    },
-  ]);
+  try {
+    const answers = await promptInput([
+      {
+        name: "projectName",
+        message: "What is the project name?",
+        type: "input",
+      },
+    ]);
+  } catch {
+    return;
+  }
 
   const CWD = process.cwd();
   const projectPath = path.join(CWD, answers.projectName);

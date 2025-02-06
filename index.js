@@ -6,11 +6,11 @@ const { generateSchematic } = require("./actions/generate-schematic");
 
 program
   .version("1.0.0")
-  .description("A CLI tool to generate an MVC boilerplate");
+  .description("Forgi: A CLI tool to generate an MVC boilerplate");
 
 program
   .command("scaffold")
-  .description("Creates an MVC boilerplate")
+  .description("Scaffold a new project")
   .action(generate);
 
 program
