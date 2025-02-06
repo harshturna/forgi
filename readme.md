@@ -34,7 +34,6 @@ To generate new components (controllers, routes, services, etc.): `npx forgi gen
 You'll be prompted to enter:
 
 - Entity name
-- Project name
 - Fields (comma-separated)
 - Field types (comma-separated)
 
