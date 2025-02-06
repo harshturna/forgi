@@ -17,11 +17,6 @@ async function generateSchematic() {
       type: "input",
     },
     {
-      name: "projectName",
-      message: `What is the project name?`,
-      type: "input",
-    },
-    {
       name: "fields",
       message: `Enter the list of fields separated with comma (for model and validation)`,
       type: "input",
@@ -34,54 +29,35 @@ async function generateSchematic() {
   ]);
 
   // controller
-  await generateSchematicFile(
-    answers.projectName,
-    "controller",
-    answers.entityName,
-    { fileName: answers.entityName }
-  );
+  await generateSchematicFile("controller", answers.entityName, {
+    fileName: answers.entityName,
+  });
 
   // route
-  await generateSchematicFile(
-    answers.projectName,
-    "route",
-    answers.entityName,
-    { fileName: answers.entityName }
-  );
+  await generateSchematicFile("route", answers.entityName, {
+    fileName: answers.entityName,
+  });
 
   // service
-  await generateSchematicFile(
-    answers.projectName,
-    "service",
-    answers.entityName,
-    { fileName: answers.entityName }
-  );
+  await generateSchematicFile("service", answers.entityName, {
+    fileName: answers.entityName,
+  });
 
   // model
   const fields = answers.fields.split(",");
   const types = answers.types.split(",");
-  await generateSchematicFile(
-    answers.projectName,
-    "model",
-    answers.entityName,
-    {
-      fields,
-      types,
-      modelName: answers.entityName,
-    }
-  );
+  await generateSchematicFile("model", answers.entityName, {
+    fields,
+    types,
+    modelName: answers.entityName,
+  });
 
   // validation
-  await generateSchematicFile(
-    answers.projectName,
-    "validation",
-    answers.entityName,
-    {
-      fields,
-      types,
-      validationName: answers.entityName,
-    }
-  );
+  await generateSchematicFile("validation", answers.entityName, {
+    fields,
+    types,
+    validationName: answers.entityName,
+  });
 }
 
 async function generateSchematicFile(
