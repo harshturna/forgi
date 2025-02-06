@@ -10,15 +10,11 @@ A command-line interface tool that helps you quickly scaffold Node.js projects w
 - 🔧 Built-in MongoDB integration
 - ✨ Automatic environment file generation
 
-## Installation
-
-npm install -g node-scaffold-cli
-
 ## Usage
 
 ### Scaffolding a New Project
 
-To create a new Node.js project: `node-scaffold scaffold`
+To create a new Node.js project: `npx forgi scaffold`
 
 You'll be prompted to enter:
 
@@ -33,7 +29,7 @@ This will:
 
 ### Generating Components
 
-To generate new components (controllers, routes, services, etc.): `node-scaffold generate`
+To generate new components (controllers, routes, services, etc.): `npx forgi generate`
 
 You'll be prompted to enter:
 
@@ -57,3 +53,8 @@ This will generate:
 - boolean
 - date
 - objectid
+
+## Available commands
+
+- `npx forgi scaffold` - Creates and configures base project
+- `npx forgi generate` - Generates new components for an entity
